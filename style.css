@@ -1,0 +1,174 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Fredoka One', cursive;
+    background-color: #2e7d32; /* Vert foncé forêt */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+    color: white;
+}
+
+#game-container {
+    position: relative;
+    width: 800px;
+    height: 600px;
+    background: #4caf50; /* Vert golf plus clair */
+    border: 10px solid #5d4037; /* Bordure bois */
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.4); /* Léger assombrissement */
+    z-index: 10;
+}
+
+.screen.active {
+    display: flex;
+}
+
+/* Page d'accueil */
+h1 {
+    font-size: 4rem;
+    text-shadow: 3px 3px 0 #388e3c;
+    margin-bottom: 20px;
+}
+
+#btn-play {
+    background: white;
+    color: #4caf50;
+    border: none;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    font-size: 3rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 10px; /* Centrage optique du triangle */
+}
+
+#btn-play:hover {
+    transform: scale(1.1);
+}
+
+/* Formulaires */
+.form-group {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 1.2rem;
+}
+
+input, select {
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: none;
+    font-family: sans-serif;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    background: #ffeb3b;
+    border: none;
+    border-radius: 5px;
+    color: #333;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+button:hover {
+    background: #fdd835;
+}
+
+/* Jeu */
+#game-screen {
+    background: none; /* Pas d'overlay sombre pendant le jeu */
+    justify-content: flex-start;
+}
+
+#hud {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 10px 20px;
+    background: rgba(0,0,0,0.5);
+    font-size: 1.2rem;
+    z-index: 2;
+}
+
+canvas {
+    background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+CjxwYXRoIGQ9Ik0wIDBoNDB2NDBIMHoiIGZpbGw9IiM2NmJiNmEiLz4KPHBhdGggZD0iTTAgMjBoMjB2MjBIMHoiIGZpbGw9IiM4MWc3OGQiIG9wYWNpdHk9IjAuMSIvPgo8cGF0aCBkPSJNMjAgMGgyMHYyMEgyMHoiIGZpbGw9IiM4MWc3OGQiIG9wYWNpdHk9IjAuMSIvPgo8L3N2Zz4='); /* Motif herbe simple */
+    cursor: crosshair;
+}
+
+#message-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+    padding: 20px 40px;
+    border-radius: 10px;
+    font-size: 2rem;
+    display: none;
+    pointer-events: none;
+}
+#message-overlay.show {
+    display: block;
+    animation: popIn 0.5s ease;
+}
+
+/* Tableau des scores */
+#scoreboard table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    color: #333;
+    border-radius: 10px;
+    overflow: hidden;
+}
+#scoreboard th, #scoreboard td {
+    padding: 10px 20px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+}
+#scoreboard th {
+    background: #4caf50;
+    color: white;
+}
+
+.hidden { display: none; }
+
+@keyframes popIn {
+    0% { transform: translate(-50%, -50%) scale(0); }
+    80% { transform: translate(-50%, -50%) scale(1.1); }
+    100% { transform: translate(-50%, -50%) scale(1); }
+}
