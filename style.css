@@ -1,102 +1,176 @@
+:root {
+    --primary: #00c853; /* Vert vif moderne */
+    --primary-dark: #009624;
+    --accent: #ffd600; /* Jaune */
+    --text: #37474f;
+    --bg-blue: #4fc3f7; /* Ciel bleu cartoon */
+    --ui-panel: rgba(255, 255, 255, 0.95);
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    touch-action: none; /* Empêche le scroll quand on joue sur mobile */
+    /* Empêche les comportements tactiles par défaut du navigateur */
+    touch-action: none; 
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
-    font-family: 'Fredoka One', cursive;
-    background-color: #2e7d32;
+    font-family: 'Nunito', sans-serif;
+    background-color: var(--bg-blue);
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    overflow: hidden;
-    color: white;
+}
+
+/* Gestion du ratio pour que le jeu ne soit pas trop large sur PC
+   et remplisse l'écran sur mobile */
+#game-aspect-ratio-container {
+    width: 100%;
+    height: 100%;
+    max-width: 600px; /* Largeur max sur PC */
+    aspect-ratio: 9 / 16; /* Ratio téléphone vertical */
+    max-height: 100vh;
+    position: relative;
+    background: #333;
+    box-shadow: 0 0 50px rgba(0,0,0,0.3);
 }
 
 #game-container {
-    position: relative;
-    /* On garde les dimensions internes, mais le CSS va gérer l'affichage */
-    width: 800px; 
-    height: 600px;
-    background: #4caf50;
-    border: 10px solid #5d4037;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    
-    /* ASTUCE RESPONSIVE : Si l'écran est plus petit, on réduit l'échelle */
-    transform-origin: center center;
-}
-
-/* Écrans écrans (Accueil, Fin, etc.) */
-.screen {
-    position: absolute;
-    top: 0;
-    left: 0;
     width: 100%;
     height: 100%;
-    display: none;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background: rgba(0, 0, 0, 0.6);
-    z-index: 10;
-    padding: 20px; /* Pour ne pas coller aux bords sur mobile */
-    text-align: center;
-}
-
-.screen.active { display: flex; }
-
-/* Styles des textes et boutons */
-h1 { font-size: 3rem; text-shadow: 3px 3px 0 #388e3c; margin-bottom: 20px; }
-h2 { font-size: 2rem; margin-bottom: 20px; }
-
-#btn-play {
-    background: white;
-    color: #4caf50;
-    border: none;
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    font-size: 2.5rem;
-    cursor: pointer;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    display: flex; align-items: center; justify-content: center; padding-left: 8px;
-}
-
-.form-group { margin-bottom: 15px; width: 100%; max-width: 300px; }
-label { display: block; margin-bottom: 5px; font-size: 1rem; }
-input, select { padding: 10px; font-size: 1rem; border-radius: 5px; border: none; width: 100%; }
-button { padding: 12px 24px; font-size: 1.2rem; cursor: pointer; background: #ffeb3b; border: none; border-radius: 5px; color: #333; font-weight: bold; margin-top: 10px; }
-
-/* Jeu & HUD */
-#game-screen { background: none; justify-content: flex-start; pointer-events: none; /* Laisse passer les clics vers le canvas */ }
-#hud {
-    position: absolute; top: 0; left: 0;
-    display: flex; justify-content: space-between;
-    width: 100%; padding: 10px;
-    background: rgba(0,0,0,0.5);
-    font-size: 1rem; z-index: 2;
-    pointer-events: none; /* Important pour cliquer au travers */
+    position: relative;
+    background: var(--primary);
+    overflow: hidden;
 }
 
 canvas {
-    background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+CjxwYXRoIGQ9Ik0wIDBoNDB2NDBIMHoiIGZpbGw9IiM2NmJiNmEiLz4KPHBhdGggZD0iTTAgMjBoMjB2MjBIMHoiIGZpbGw9IiM4MWc3OGQiIG9wYWNpdHk9IjAuMSIvPgo8cGF0aCBkPSJNMjAgMGgyMHYyMEgyMHoiIGZpbGw9IiM4MWc3OGQiIG9wYWNpdHk9IjAuMSIvPgo8L3N2Zz4=');
+    display: block;
     width: 100%;
     height: 100%;
-    touch-action: none; /* CRUCIAL pour mobile */
+    /* Le fond est maintenant géré dans le canvas */
 }
 
-#message-overlay {
-    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-    background: rgba(255, 255, 255, 0.95); color: #333; padding: 20px;
-    border-radius: 10px; font-size: 1.5rem; text-align: center;
-    display: none; pointer-events: none; width: 80%;
+/* --- UI ET ÉCRANS --- */
+
+.screen {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    display: none;
+    flex-direction: column;
+    z-index: 10;
 }
-#message-overlay.show { display: block; }
-#scoreboard table { width: 100%; background: white; color: #333; border-radius: 10px; overflow: hidden; font-size: 0.9rem; }
-#scoreboard th, #scoreboard td { padding: 8px; border-bottom: 1px solid #ddd; text-align: center; }
-#scoreboard th { background: #4caf50; color: white; }
-.hidden { display: none; }
+.screen.active { display: flex; }
+
+.ui-overlay {
+    background: rgba(0, 0, 0, 0.4);
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* Accueil */
+.game-title {
+    font-size: 3rem;
+    font-weight: 900;
+    color: white;
+    text-shadow: 3px 3px 0 var(--primary-dark), -3px -3px 0 var(--accent);
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.play-button {
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 8px solid white;
+    color: var(--primary-dark);
+    font-size: 1.5rem;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.pulse { animation: pulse-anim 1.5s infinite; }
+@keyframes pulse-anim {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Panels de configuration/fin */
+.panel {
+    background: var(--ui-panel);
+    padding: 30px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    color: var(--text);
+}
+
+.panel h2 { font-weight: 900; margin-bottom: 20px; color: var(--primary-dark); }
+
+.form-group { margin-bottom: 20px; text-align: left; }
+label { display: block; font-weight: 700; margin-bottom: 10px; }
+input[type=range], select { width: 100%; padding: 10px; font-size: 1.1rem; border-radius: 10px; border: 2px solid #ddd; }
+
+.action-button {
+    width: 100%;
+    padding: 15px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.3rem;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 0 5px 0 var(--primary-dark);
+    transition: transform 0.1s, box-shadow 0.1s;
+}
+.action-button:active { transform: translateY(5px); box-shadow: none; }
+
+/* --- HUD JEU --- */
+#game-screen { pointer-events: none; } /* Laisse passer les clics au canvas */
+#hud-header {
+    position: absolute; top: 0; left: 0; width: 100%;
+    padding: 15px;
+    display: flex; justify-content: space-between;
+    pointer-events: none;
+}
+
+.player-badge, .level-badge {
+    background: var(--ui-panel);
+    padding: 8px 15px;
+    border-radius: 50px;
+    display: flex; align-items: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    font-weight: 700; color: var(--text);
+}
+
+.avatar { width: 40px; height: 40px; border-radius: 50%; background: #ccc; margin-right: 10px; border: 3px solid white; }
+.player-info { display: flex; flex-direction: column; }
+#player-name { font-size: 0.9rem; }
+#player-score { font-size: 1.1rem; font-weight: 900; color: var(--primary-dark); }
+
+/* Messages et Scoreboard */
+#message-overlay {
+    position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%) scale(0);
+    background: white; padding: 20px 40px; border-radius: 20px;
+    font-size: 1.5rem; font-weight: 900; color: var(--primary-dark);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: none;
+    text-align: center;
+}
+#message-overlay.show { transform: translate(-50%, -50%) scale(1); }
+
+#scoreboard table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+#scoreboard th { text-align: left; color: var(--primary-dark); }
+#scoreboard td { padding: 10px 0; border-bottom: 2px solid #eee; font-weight: 700; }
